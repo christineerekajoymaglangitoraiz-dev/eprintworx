@@ -79,7 +79,7 @@ if ($message) {
         <table>
             <thead>
                 <tr>
-                    <th>#</th> <th>Name</th> <th>Username</th> <th>Role</th> <th>Since</th>
+                    <th>#</th> <th>Name</th> <th>Username</th> <th>Role</th>
                 </tr>
             </thead>
             <tbody>
@@ -87,12 +87,7 @@ if ($message) {
                     <td class="text-muted"><?= $admin['staff_id'] ?></td>
                     <td class="fw-bold"><?= htmlspecialchars($admin['staff_name']) ?></td>
                     <td class="text-muted"><?= htmlspecialchars($admin['username']) ?></td>
-                    <td>
-                        <span class="badge">ADMIN</span>
-                    </td>
-                    <td class="text-muted">
-                        <?= date('M d, Y', strtotime($admin['created_at'])) ?>
-                    </td>
+                    <td><span class="badge">ADMIN</span></td>
                 </tr>
             </tbody>
         </table>
@@ -109,7 +104,7 @@ if ($message) {
         <table>
             <thead>
                 <tr>
-                    <th>#</th> <th>Name</th> <th>Username</th> <th>Role</th> <th>Since</th> <th>Action</th>
+                    <th>#</th> <th>Name</th> <th>Username</th> <th>Role</th> <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -124,9 +119,6 @@ if ($message) {
                         <td class="text-muted"><?= htmlspecialchars($row['username']) ?></td>
                         <td>
                             <span class="badge b-blue">STAFF</span>
-                        </td>
-                        <td class="text-muted">
-                            <?= date('M d, Y', strtotime($row['created_at'])) ?>
                         </td>
                         <td>
                             <form method="POST" 
