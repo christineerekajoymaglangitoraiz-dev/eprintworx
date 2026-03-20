@@ -8,7 +8,7 @@ require_once '../includes/db.php';
 
 $staff_id = $_SESSION['staff_id'];
 
-$transactions = $conn->query("SELECT tr.*, c.customer_name, p.payment_method FROM transaction_record tr JOIN orders o ON o.order_id = tr.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN payment p ON p.payment_id = tr.payment_id WHERE o.staff_id = $staff_id ORDER BY tr.transaction_date DESC, tr.transaction_id DESC");
+$transactions = $conn->query("SELECT tr.*, c.customer_name, p.payment_method, p.order_id FROM transaction_record tr JOIN payment p ON p.payment_id = tr.payment_id JOIN orders o ON o.order_id = p.order_id JOIN customer c ON c.customer_id = o.customer_id WHERE o.staff_id = $staff_id ORDER BY tr.transaction_date DESC, tr.transaction_id DESC");
 
 require_once '../includes/header.php';
 ?>
