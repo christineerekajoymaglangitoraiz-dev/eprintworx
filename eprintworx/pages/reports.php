@@ -47,7 +47,8 @@ $top_services = $conn->query("
 $collections_by_staff = $conn->query("
     SELECT s.staff_name, COUNT(tr.transaction_id) AS transaction_count, COALESCE(SUM(tr.total_amount), 0) AS amount 
     FROM transaction_record tr 
-    JOIN orders o ON o.order_id = tr.order_id 
+    JOIN payment p ON p.payment_id = tr.payment_id
+    JOIN orders o ON o.order_id = p.order_id 
     JOIN staff s ON s.staff_id = o.staff_id 
     " . ($where ? $where : "") . " 
     GROUP BY o.staff_id 
