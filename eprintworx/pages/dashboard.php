@@ -9,8 +9,8 @@ $staff_id = $_SESSION['staff_id'];
 if ($role === 'staff') {
 $my_orders = $conn->query("SELECT COUNT(*) FROM orders WHERE staff_id = $staff_id")->fetch_row()[0];
 $my_pending = $conn->query("SELECT COUNT(*) FROM orders WHERE staff_id = $staff_id AND status = 'Pending'")->fetch_row()[0];
-$my_today_tx = $conn->query("SELECT COUNT(*) FROM transaction_record tr JOIN orders o ON o.order_id = tr.order_id WHERE o.staff_id = $staff_id AND tr.transaction_date = CURDATE()")->fetch_row()[0];
-$my_today_total = $conn->query("SELECT COALESCE(SUM(tr.total_amount), 0) FROM transaction_record tr JOIN orders o ON o.order_id = tr.order_id WHERE o.staff_id = $staff_id AND tr.transaction_date = CURDATE()")->fetch_row()[0];
+$my_today_tx = $conn->query("SELECT COUNT(*) FROM transaction_record tr JOIN payment p ON p.payment_id = tr.payment_id JOIN orders o ON o.order_id = p.order_id WHERE o.staff_id = $staff_id AND tr.transaction_date = CURDATE()")->fetch_row()[0];
+$my_today_total = $conn->query("SELECT COALESCE(SUM(tr.total_amount), 0) FROM transaction_record tr JOIN payment p ON p.payment_id = tr.payment_id JOIN orders o ON o.order_id = p.order_id WHERE o.staff_id = $staff_id AND tr.transaction_date = CURDATE()")->fetch_row()[0];
 $recent_orders = $conn->query("SELECT o.*, c.customer_name FROM orders o JOIN customer c ON c.customer_id = o.customer_id WHERE o.staff_id = $staff_id ORDER BY o.created_at DESC LIMIT 6");
 ?>
 
@@ -97,7 +97,7 @@ $total_staff = $conn->query("SELECT COUNT(*) FROM staff")->fetch_row()[0];
 $month_total = $conn->query("SELECT COALESCE(SUM(total_amount), 0) FROM transaction_record WHERE MONTH(transaction_date) = MONTH(CURDATE()) AND YEAR(transaction_date) = YEAR(CURDATE())")->fetch_row()[0];
 $today_total = $conn->query("SELECT COALESCE(SUM(total_amount), 0) FROM transaction_record WHERE transaction_date = CURDATE()")->fetch_row()[0];
 $total_tx = $conn->query("SELECT COUNT(*) FROM transaction_record")->fetch_row()[0];
-$recent_tx = $conn->query("SELECT tr.*, c.customer_name, s.staff_name, p.payment_method FROM transaction_record tr JOIN orders o ON o.order_id = tr.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN staff s ON s.staff_id = o.staff_id JOIN payment p ON p.payment_id = tr.payment_id ORDER BY tr.transaction_date DESC LIMIT 8");
+$recent_tx = $conn->query("SELECT tr.*, c.customer_name, s.staff_name, p.payment_method FROM transaction_record tr JOIN payment p ON p.payment_id = tr.payment_id JOIN orders o ON o.order_id = p.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN staff s ON s.staff_id = o.staff_id ORDER BY tr.transaction_date DESC LIMIT 8");
 ?>
     
     <div class="page-header"></div>
