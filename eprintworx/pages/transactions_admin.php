@@ -27,8 +27,8 @@ if ($to_date) {
     $where .= " AND tr.transaction_date <= '$formatted_to'";
 }
 
-$transactions = $conn->query("SELECT tr.*, c.customer_name, s.staff_name, p.payment_method, o.status FROM transaction_record tr JOIN orders o ON o.order_id = tr.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN staff s ON s.staff_id = o.staff_id JOIN payment p ON p.payment_id = tr.payment_id $where ORDER BY tr.transaction_date DESC, tr.transaction_id DESC");
-$totals = $conn->query("SELECT COUNT(*), COALESCE(SUM(tr.total_amount), 0) FROM transaction_record tr JOIN orders o ON o.order_id = tr.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN staff s ON s.staff_id = o.staff_id JOIN payment p ON p.payment_id = tr.payment_id $where")->fetch_row();
+$transactions = $conn->query("SELECT tr.*, c.customer_name, s.staff_name, p.payment_method, p.order_id, o.status FROM transaction_record tr JOIN payment p ON p.payment_id = tr.payment_id JOIN orders o ON o.order_id = p.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN staff s ON s.staff_id = o.staff_id $where ORDER BY tr.transaction_date DESC, tr.transaction_id DESC");
+$totals = $conn->query("SELECT COUNT(*), COALESCE(SUM(tr.total_amount), 0) FROM transaction_record tr JOIN payment p ON p.payment_id = tr.payment_id JOIN orders o ON o.order_id = p.order_id JOIN customer c ON c.customer_id = o.customer_id JOIN staff s ON s.staff_id = o.staff_id $where")->fetch_row();
 $transaction_count = $totals[0];
 $total_amount = $totals[1];
 
