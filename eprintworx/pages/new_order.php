@@ -75,8 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insert_payment->execute();
         $payment_id = $conn->insert_id;
 
-        $insert_transaction = $conn->prepare("INSERT INTO transaction_record (order_id, payment_id, transaction_date, total_amount) VALUES (?, ?, ?, ?)");
-        $insert_transaction->bind_param('iisd', $order_id, $payment_id, $today, $total);
+        $insert_transaction = $conn->prepare("INSERT INTO transaction_record (payment_id, transaction_date, total_amount) VALUES (?, ?, ?)");
+        $insert_transaction->bind_param('isd', $payment_id, $today, $total);
         $insert_transaction->execute();
 
         header("Location: view_order.php?id=$order_id&new=1");
