@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['add'])) {
         $staff_name = $conn->real_escape_string(trim($_POST['staff_name']));
         $username = $conn->real_escape_string(trim($_POST['username']));
-        $password = md5(trim($_POST['password']));
+        $password = password_hash(trim($_POST['password']), PASSWORD_DEFAULT);
         $role = 'staff';
         
         $check = $conn->query("SELECT staff_id FROM staff WHERE username = '$username'")->fetch_assoc();

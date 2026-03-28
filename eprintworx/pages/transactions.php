@@ -13,8 +13,6 @@ $transactions = $conn->query("SELECT tr.*, c.customer_name, p.payment_method, p.
 require_once '../includes/header.php';
 ?>
 
-<div class="page-header"></div>
-
 <div class="card">
     <div class="card-header">
         <span class="card-title">Transaction Records</span>
@@ -45,7 +43,6 @@ require_once '../includes/header.php';
                         <td class="text-accent fw-bold">₱<?= number_format($row['total_amount'], 2) ?></td>
                         <td>
                             <a href="view_order.php?id=<?= $row['order_id'] ?>" class="btn btn-blue btn-sm">View</a>
-                            </a>
                         </td>
                     </tr>
                 <?php endwhile; ?>

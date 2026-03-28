@@ -21,7 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $result = $stmt->get_result();
         $user = $result->fetch_assoc();
         
-        if ($user && $user['password'] === md5($password)) {
+        $password_ok = false;
+        if ($user) {
+            if (password_verify($password, $user['password'])) {
+                $password_ok = true;
+            } elseif ($user['password'] === md5($password)) {
+                $password_ok = true;
+                $new_hash = password_hash($password, PASSWORD_DEFAULT);
+                $upd = $conn->prepare("UPDATE staff SET password = ? WHERE staff_id = ?");
+                $upd->bind_param('si', $new_hash, $user['staff_id']);
+                $upd->execute();
+            }
+        }
+
+        if ($password_ok) {
             $_SESSION['staff_id'] = $user['staff_id'];
             $_SESSION['staff_name'] = $user['staff_name'];
             $_SESSION['role'] = $user['role'];

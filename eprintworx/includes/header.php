@@ -31,7 +31,6 @@ $_init = strtoupper(substr($_name, 0, 1));
                 <?php if ($_role === 'staff'): ?>
                     <a href="new_order.php" class="nav-item <?php echo $_active === 'new_order' ? 'active' : ''; ?>"> New Order</a>
                     <a href="orders.php" class="nav-item <?php echo $_active === 'orders' ? 'active' : ''; ?>"> Orders</a>
-                    <a href="payments.php" class="nav-item <?php echo $_active === 'payments' ? 'active' : ''; ?>"> Payments</a>
                     <a href="transactions.php" class="nav-item <?php echo $_active === 'transactions' ? 'active' : ''; ?>"> Transactions</a>
                 <?php endif; ?>
 

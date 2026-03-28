@@ -19,7 +19,6 @@ $recent_orders = $conn->query("SELECT o.*, c.customer_name FROM orders o JOIN cu
         <div>
             <h1>Welcome back, <?php echo htmlspecialchars($_SESSION['staff_name']); ?>!</h1>
         </div>
-            <a href="new_order.php" class="btn btn-primary">+ New Order</a>
     </div>
 
     <div class="stats-grid">

@@ -1,12 +1,17 @@
 <?php
-define('DB_HOST', 'localhost');
-define('DB_USER', 'root');
-define('DB_PASS', '');
-define('DB_NAME', 'eprintworx');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
+$host = "localhost";
+$user = "root";
+$password = "";
+$database = "eprintworx";
+
+$conn = new mysqli($host, $user, $password, $database);
 if ($conn->connect_error) {
     die('Database connection failed: ' . $conn->connect_error);
 }
 $conn->set_charset('utf8mb4');
+
+$connect2db = $conn;
 ?>

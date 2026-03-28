@@ -28,9 +28,15 @@ while ($row = $items_result->fetch_assoc()) {
 
 $payment = $conn->query("SELECT * FROM payment WHERE order_id=$id LIMIT 1")->fetch_assoc();
 
+$allowed_statuses = ['Pending', 'Processing', 'Completed', 'Cancelled'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['status'])) {
-    $st = $conn->real_escape_string($_POST['status']);
-    $conn->query("UPDATE orders SET status='$st' WHERE order_id=$id");
+    $st = $_POST['status'];
+    if (in_array($st, $allowed_statuses, true)) {
+        $stmt = $conn->prepare("UPDATE orders SET status=? WHERE order_id=?");
+        $stmt->bind_param('si', $st, $id);
+        $stmt->execute();
+    }
     header("Location: view_order.php?id=$id");
     exit;
 }
@@ -83,8 +89,7 @@ require_once '../includes/header.php';
             <div class="info-row">
                 <span class="info-key">Status</span>
                 <span class="info-val">
-                    <?php $bs = ['Pending', 'Processing', 'Completed', 'Cancelled']; ?>
-                    <span class="badge <?= $bs[$order['status']] ?? '' ?>"><?= $order['status'] ?></span>
+                    <span class="badge"><?= $order['status'] ?></span>
                 </span>
             </div>
             <div class="info-row">
@@ -95,7 +100,7 @@ require_once '../includes/header.php';
             <div style="font-size: 13px; font-weight: 700; color: var(--muted); margin-top: 15px; margin-bottom: 10px;">UPDATE STATUS</div>
             <form method="POST" style="display: flex; gap: 9px;">
                 <select name="status" class="form-control">
-                    <?php foreach (['Pending', 'Processing','Completed', 'Cancelled'] as $st): ?>
+                    <?php foreach ($allowed_statuses as $st): ?>
                         <option <?= $order['status'] === $st ? 'selected' : '' ?>><?= $st ?></option>
                     <?php endforeach; ?>
                 </select>

@@ -8,7 +8,7 @@ require_once '../includes/db.php';
 
 $staff_id = $_SESSION['staff_id'];
 $search = trim($_GET['search'] ?? '');
-$status = $_GET['status'] ?? '';
+$filter_status = $_GET['status'] ?? '';
 
 $where = "WHERE o.staff_id = $staff_id";
 
@@ -17,8 +17,8 @@ if ($search) {
     $where .= " AND (c.customer_name LIKE '%$search_escaped%' OR o.order_id = '$search_escaped')";
 }
 
-if ($status) {
-    $status_escaped = $conn->real_escape_string($status);
+if ($filter_status) {
+    $status_escaped = $conn->real_escape_string($filter_status);
     $where .= " AND o.status = '$status_escaped'";
 }
 
@@ -30,10 +30,6 @@ $orders = $conn->query("
 
 require_once '../includes/header.php';
 ?>
-
-<div class="page-header">
-    <a href="new_order.php" class="btn btn-primary">+ New Order</a>
-</div>
 
 <div class="card">
     <div class="card-header">
@@ -53,7 +49,7 @@ require_once '../includes/header.php';
                 $statuses = ['Pending', 'Processing', 'Completed', 'Cancelled'];
                 foreach ($statuses as $status_option): 
                 ?>
-                    <option <?= $status === $status_option ? 'selected' : '' ?>>
+                    <option <?= $filter_status === $status_option ? 'selected' : '' ?>>
                         <?= $status_option ?>
                     </option>
                 <?php endforeach; ?>
@@ -61,7 +57,7 @@ require_once '../includes/header.php';
             
             <button class="btn btn-secondary">Filter</button>
             
-            <?php if ($search || $status): ?>
+            <?php if ($search || $filter_status): ?>
                 <a href="orders.php" class="btn btn-secondary">Clear</a>
             <?php endif; ?>
         </form>
@@ -76,7 +72,6 @@ require_once '../includes/header.php';
             </thead>
             <tbody>
                 <?php
-                $status_badges = ['Pending', 'Processing', 'Completed', 'Cancelled'];
                 $row_count = 0;
                 
                 while ($row = $orders->fetch_assoc()):
@@ -88,11 +83,10 @@ require_once '../includes/header.php';
                         <td class="text-muted"><?= $row['order_date'] ?></td>
                         <td class="text-accent fw-bold">₱<?= number_format($row['total_amount'], 2) ?></td>
                         <td>
-                            <span class="badge <?= $status_badges[$row['status']] ?? '' ?>"><?= $row['status'] ?></span>
+                            <span class="badge"><?= $row['status'] ?></span>
                         </td>
                         <td>
                             <a href="view_order.php?id=<?= $row['order_id'] ?>" class="btn btn-blue btn-sm">View</a>
-                            </a>
                         </td>
                     </tr>
                 <?php endwhile; ?>
